@@ -10,7 +10,7 @@ float evalEquationStr(string eq_str){
 
 	lexer.setEquationStr(eq_str);
 	lexer.gatherLexemes();
-	lexer.printLexList(); 
+	// lexer.printLexList(); 
 	vector<LexItem> lex_list = lexer.getLexList();
 
 	parser.setLexList(lex_list);
@@ -21,8 +21,15 @@ float evalEquationStr(string eq_str){
 }
 
 int main(){
-	string eq_str = "3 + 4 * 2 / (1 - 5) ^ 2 ^ 3";
+	// string eq_str = "420 * 69 / 24.5 * (6^2) + 4";
+	// string eq_str = "3 + 4 * 2 / (1 - 5) ^ 2 ^ 3";
 	// string eq_str = "3 + 4 * (2 - 1)";
-	float res = evalEquationStr(eq_str);
-	cout << "Result: " << res << endl;
+	// string eq_str = "(2+3/2)/(6*4+2+3)";
+	string eq_str;
+	cout << "Enter a math expression:\n";
+	while (getline(std::cin, eq_str)){
+		float res = evalEquationStr(eq_str);
+		cout << "Result: " << res << endl
+			<< "Enter a math expression:\n";
+	}
 }

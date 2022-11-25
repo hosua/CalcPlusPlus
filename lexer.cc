@@ -62,7 +62,7 @@ LexItem Lexer::getNextToken(){
 	}
 
 	cerr << "ERROR: Illegal character \"" << ch << "\"" << endl;
-	exit(EXIT_FAILURE);
+	return LexItem(ERR, "ERR");
 }
 
 void Lexer::condenseNegNums(){
@@ -77,7 +77,9 @@ void Lexer::condenseNegNums(){
 			LexItem prev = lex_list[idx-1];
 			LexItem next = lex_list[idx+1];
 			LexItem next_next = lex_list[idx+2];
-			if (prev.getToken() == LPAREN && next.getToken() == NUM && next_next.getToken() == RPAREN){
+			if (prev.getToken() == LPAREN && 
+			next.getToken() == NUM && 
+			next_next.getToken() == RPAREN){
 				LexItem new_lex = LexItem(NUM, "-" + std::to_string(next.getVal()));
 				lex_list.erase(lex_list.begin()+idx-1, lex_list.begin()+idx+3);
 				lex_list.insert(lex_list.begin()+idx-1, new_lex);
@@ -90,7 +92,8 @@ void Lexer::condenseNegNums(){
 
 void Lexer::gatherLexemes(){
 	LexItem lex;
-	while ( (lex = getNextToken()).getToken() != END)
+	while ( ((lex = getNextToken()).getToken() != END) &&
+	(lex.getToken() != ERR))
 		pushBackLex(lex);
 	condenseNegNums();
 }
