@@ -2,6 +2,9 @@
 #include <math.h>
 #include <limits>
 
+// Set of all trig functions
+set<Token> trig_set = { SIN, COS, TAN, CSC, SEC, COT };
+
 double Calc::evalRPN(queue<LexItem> output_queue){
     while (!output_queue.empty()){
         LexItem lex = output_queue.front();
@@ -9,7 +12,7 @@ double Calc::evalRPN(queue<LexItem> output_queue){
         output_queue.pop();
         if (tok == NUM){
             num_stack.push(lex.getVal());
-        // If token is a trig function
+        // If token is not a trig function
         } else if (trig_set.find(tok) == trig_set.end()) {
             // If the num_stack is empty for any of these calls, there must be a syntax error somewhere.
             if(num_stack.empty()){
@@ -17,7 +20,10 @@ double Calc::evalRPN(queue<LexItem> output_queue){
                 return ERR_RES;
             }
             double b = num_stack.top(); num_stack.pop();
-            assert(!num_stack.empty());
+            if(num_stack.empty()){
+                cerr << "ERROR: Calc detected syntax error\n";
+                return ERR_RES;
+            }
             double a = num_stack.top(); num_stack.pop();
             switch(tok) {
                 case PLUS:
@@ -40,6 +46,9 @@ double Calc::evalRPN(queue<LexItem> output_queue){
                 case EXP:
                     num_stack.push(powf(a, b));
                     break;
+                default:
+                    cerr << "ERROR: Unknown error in Calc\n";
+                    return ERR_RES;
             }
         } else {
             double a = convertToRadian(num_stack.top()); 
@@ -89,6 +98,9 @@ double Calc::evalRPN(queue<LexItem> output_queue){
                     }
                     num_stack.push(1/tan(a));
                     break;
+                default:
+                    cerr << "ERROR: Unknown error in Calc\n";
+                    return ERR_RES;
             }
         }
     }

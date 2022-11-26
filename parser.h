@@ -19,6 +19,11 @@ public:
     Parser() : err_flag(false) {}
     Parser(vector<LexItem> lex_list) : lex_list(lex_list){}
     ~Parser(){}
+
+    // Checks lex_list and ensures that all functions are preceded by an LPAREN
+    bool validateFunctionParenthesis();
+
+    bool checkErr(){ return err_flag; }
     void setLexList(vector<LexItem> lex_list){ this->lex_list = lex_list; }
     // Convert to Reverse-Polish Notation and store in output_queue
     void convertToRPN(); 

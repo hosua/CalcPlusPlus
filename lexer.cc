@@ -26,8 +26,8 @@ map<Token, char> tok_sym_map = {
 // keyword sets for the lexer to detect keyword strings 
 set<string> kw_str_set { "SIN", "COS", "TAN", "CSC", "SEC", "COT" };
 
-// Set of all trigonometric functions
-set<Token> trig_set = { SIN, COS, TAN, CSC, SEC, COT };
+// Set of all functions (currently this is the same as trig_set but more will be added)
+set<Token> fn_set = { SIN, COS, TAN, CSC, SEC, COT };
 
 // Set of all supported operators
 set<Token> op_set = { PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN };
@@ -40,18 +40,12 @@ ostream& operator<<(ostream& out, LexItem& lex){
 	return out;
 }
 
-double LexItem::getVal(){
-	// A value should never be retrived if the token is an operator.
-	assert(tok == NUM);
-	return val;
-}
-
 
 LexItem Lexer::getNextToken(){
 	char ch;
 	do { 
 		if (!ss.get(ch))
-			return LexItem(END, "END");
+			return LexItem(END);
 	} while (isspace(ch));
 
 	if (sym_tok_map.find(ch) != sym_tok_map.end()){
@@ -65,7 +59,7 @@ LexItem Lexer::getNextToken(){
 				if(has_dot){
 					cerr << "ERROR: Number \"" << lexeme << "\" contains an illegal decimal." << endl;
 					err_flag = true;
-					return LexItem(ERR, "ERR");
+					return LexItem(ERR);
 				} else {
 					has_dot = true;
 				}
@@ -81,9 +75,9 @@ LexItem Lexer::getNextToken(){
 		do {
 			kw += ch;
 			if (!ss.get(ch)){
-				cerr << "ERROR: Invalid keyword \"" << kw << "\"\n";
+				cerr << "ERROR: Invalid keyword, or missing function paremeter \"" << kw << "\"\n";
 				err_flag = true;
-				return LexItem(ERR, "ERR");
+				return LexItem(ERR);
 			}
 		} while (isalpha(ch));
 		ss.putback(ch);
@@ -99,12 +93,12 @@ LexItem Lexer::getNextToken(){
 		// No match error
 		cerr << "ERROR: Unknown keyword \"" << kw << "\"\n";
 		err_flag = true;
-		return LexItem(ERR, "ERR");
+		return LexItem(ERR);
 	}
 
 	cerr << "ERROR: Illegal character \"" << ch << "\"" << endl;
 	err_flag = true;
-	return LexItem(ERR, "ERR");
+	return LexItem(ERR);
 }
 
 void Lexer::condenseNegNums(){

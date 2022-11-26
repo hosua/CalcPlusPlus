@@ -6,14 +6,17 @@
 #include <stack>
 #include <math.h>
 
+using std::queue;
+using std::stack;
+
 // Any errors will arbritrarily set the value to the min of a double
 #define ERR_RES std::numeric_limits<double>::min()
 
 // Used for checking if a number is close enough to zero to be considered zero.
 #define EPSILON std::numeric_limits<double>::epsilon() * 10
 
-using std::queue;
-using std::stack;
+// Set of all trig functions
+extern set<Token> trig_set;
 
 class Calc {
 public:

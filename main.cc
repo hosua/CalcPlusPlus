@@ -7,17 +7,25 @@ double evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
 	lexer->setEquationStr(eq_str);
 	lexer->gatherLexemes();
 	// lexer->printLexList(); // For debugging
+	double res; 
 	vector<LexItem> lex_list = lexer->getLexList();
 
-	double res; 
 	if (!lexer->checkErr()){
 		parser->setLexList(lex_list);
-		parser->convertToRPN();
-
-		queue<LexItem> output_queue = parser->getOutputQueue();
-		res = calc->evalRPN(output_queue);
+		if (!parser->validateFunctionParenthesis()){
+			res = ERR_RES;
+		} else {
+			parser->convertToRPN();
+			if (parser->checkErr()){
+				cerr << "Parser detected an error, please check your syntax.\n";
+				res = ERR_RES;
+			} else {
+				queue<LexItem> output_queue = parser->getOutputQueue();
+				res = calc->evalRPN(output_queue);
+			}
+		}
 	} else {
-		cerr << "Could not calculate that expression. Please check your syntax.\n";
+		cerr << "Lexer detected an error, please check your syntax.\n";
 		res = ERR_RES;
 	}
 

@@ -32,15 +32,18 @@ extern map<Token, char> tok_sym_map;
 extern set<Token> op_set;
 
 extern set<string> kw_str_set;
-extern set<Token> trig_set;
+extern set<Token> fn_set;
 
 class LexItem {
 private:
+	double val;
 	Token tok;	
 	string lex_str;
-	double val;
 public:
 	LexItem() : val(INT_MIN){}
+	LexItem(Token tok) : val(INT_MIN), tok(tok), lex_str(tok_str_map[tok]){
+		assert(tok != NUM && "FATAL ERROR: Tried instantiating a NUM token with no number string.");
+	}
 	LexItem(Token tok, string lexeme) : val(INT_MIN), tok(tok){
 		if (tok == NUM)
 			val = std::stof(lexeme);
@@ -49,7 +52,12 @@ public:
 
 	Token getToken(){ return tok; } 
 	string getTokenStr(){ return tok_str_map[tok]; } 
-	double getVal();
+
+	double getVal(){
+		// A value should never be retrived if the token is an operator.
+		assert(tok == NUM && "FATAL ERROR: Attempted to retrieve a value from a non-NUM token.");
+		return val;
+	}
 };
 // Allow LexItem to be printed directly
 extern ostream& operator<<(ostream& out, LexItem& lex);
@@ -83,6 +91,8 @@ private:
 	LexItem getNextToken();
 	// After getting all tokens, this function will "condense" all negative numbers into negative tokens. (i.e., (-42) -> -42)
 	void condenseNegNums();
+	// Check that parenthesis are immediate followed by a parenthesis, otherwise there is an error.
+	void checkFunctionParenthesis();
 
 };
 
