@@ -25,10 +25,13 @@ Note that you must parenthesize function parameters, i.e. cos(45).
 
 ## To be added (maybe?)
 ```
+log, ln
 sqrt, abs
 asin, acos, atan
 sinh, cosh, tanh
 asinh, acosh, atanh
+
+Some constants, like e and pi
 ```
 
 ![Example](images/math-expr-solver.gif)
