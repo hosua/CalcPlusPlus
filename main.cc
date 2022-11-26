@@ -2,34 +2,40 @@
 #include "parser.h"
 #include "calc.h"
 
-float evalEquationStr(string eq_str){
-	cout << "eq_str: " << eq_str << endl;
-	Parser parser;
-	Lexer lexer;
-	Calc calc;
+float evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
+	// cout << "eq_str: " << eq_str << endl;
 
-	lexer.setEquationStr(eq_str);
-	lexer.gatherLexemes();
-	// lexer.printLexList(); 
-	vector<LexItem> lex_list = lexer.getLexList();
+	lexer->setEquationStr(eq_str);
+	lexer->gatherLexemes();
+	// lexer->printLexList(); // For debugging
+	vector<LexItem> lex_list = lexer->getLexList();
 
-	parser.setLexList(lex_list);
-	parser.convertToRPN();
+	parser->setLexList(lex_list);
+	parser->convertToRPN();
 
-	queue<LexItem> output_queue = parser.getOutputQueue();
-	return calc.evalRPN(output_queue);
+	queue<LexItem> output_queue = parser->getOutputQueue();
+
+	float res = calc->evalRPN(output_queue);
+	lexer->clear();
+	parser->clear();
+	return res;
 }
 
+// TODO: Impelement CLI to use readline and history libraries
+
 int main(){
-	// string eq_str = "420 * 69 / 24.5 * (6^2) + 4";
-	// string eq_str = "3 + 4 * 2 / (1 - 5) ^ 2 ^ 3";
-	// string eq_str = "3 + 4 * (2 - 1)";
-	// string eq_str = "(2+3/2)/(6*4+2+3)";
+	Parser* parser = new Parser();
+	Lexer* lexer = new Lexer();
+	Calc* calc = new Calc();
 	string eq_str;
 	cout << "Enter a math expression:\n";
-	while (getline(std::cin, eq_str)){
-		float res = evalEquationStr(eq_str);
-		cout << "Result: " << res << endl
-			<< "Enter a math expression:\n";
+	while (getline(cin, eq_str)){
+		float res = evalEquationStr(lexer, parser, calc, eq_str);
+		cout << res << "\n"
+		<< "Enter a math expression:\n";
 	}
+
+	delete parser;
+	delete lexer;
+	delete calc;
 }

@@ -13,9 +13,6 @@ map<Token, int> op_precedence_map = {
 	{MIN, 1},
 };
 
-// non-parenthesis operators
-set<Token> op_set = { PLUS, MIN, MULT, DIV, EXP };
-
 // See: https://en.wikipedia.org/wiki/Shunting_yard_algorithm
 // Converts Lex list into Reverse-Polish Notation form using the shunting yard algorithm
 void Parser::convertToRPN(){
@@ -25,7 +22,7 @@ void Parser::convertToRPN(){
         if (tok_1 == NUM)
             output_queue.push(op_1);
         // - an operator op_1:
-        else if (op_set.find(tok_1) != op_set.end()){
+        else if (tok_1 != LPAREN && tok_1 != RPAREN && op_set.find(tok_1) != op_set.end()){
             vector<Token> left_assoc = assoc_map["left"];
             LexItem op_2;
             // while:
@@ -69,9 +66,20 @@ void Parser::convertToRPN(){
         op_stack.pop();
     }
     /* DEBUGGING FUNCTION */
+    // cout << "-----" << endl;
     // while (!output_queue.empty()){
     //     cout << output_queue.front() << endl;
     //     output_queue.pop();
-
     // }
+    // exit(0);
+}
+
+void Parser::clear(){
+    lex_list.clear();
+    // Swap op_stack with empty_stack to clear it
+    stack<LexItem> empty_stack;
+    std::swap(op_stack, empty_stack);
+    // Swap output_queue with empty_queue to clear it
+    queue<LexItem> empty_queue;
+    std::swap(output_queue, empty_queue);
 }

@@ -28,6 +28,7 @@ extern map<Token, string> tok_str_map;
 extern map<string, Token> str_tok_map;
 extern map<char, Token> sym_tok_map;
 extern map<Token, char> tok_sym_map;
+extern set<Token> op_set;
 
 class LexItem {
 private:
@@ -52,8 +53,8 @@ extern ostream& operator<<(ostream& out, LexItem& lex);
 class Lexer {
 private:
 	stringstream ss;
-	string getNumStr();
 	vector<LexItem> lex_list;
+
 	// Gets the next token in the string stream
 	LexItem getNextToken();
 	// After getting all tokens, this function will "condense" all negative numbers into negative tokens. (i.e., (-42) -> -42)
@@ -63,7 +64,6 @@ public:
 	Lexer(){}
 	Lexer(string eq_str){ ss << eq_str; }
 	~Lexer(){}
-
 	void setEquationStr(string eq_str){ ss << eq_str; }
 	void gatherLexemes();
 
@@ -73,6 +73,8 @@ public:
 			cout << lex << endl;
 	}
 	vector<LexItem> getLexList(){ return lex_list; }
+	// Clear everything in the lexer
+	void clear();
 };
 
 

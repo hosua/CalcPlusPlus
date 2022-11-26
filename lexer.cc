@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include <algorithm>
 
 // END, ERR, NUM, EQ, PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN
 map<Token, string> tok_str_map = {
@@ -16,6 +17,8 @@ map<Token, char> tok_sym_map = {
 	{EQ, '='}, {PLUS, '+'}, {MIN, '-'}, {MULT, '*'}, {DIV, '/'}, {EXP, '^'}, {LPAREN, '('}, {RPAREN, ')'}
 };
 
+// Set of all supported operators
+set<Token> op_set = { PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN };
 
 ostream& operator<<(ostream& out, LexItem& lex){
 	Token tok = lex.getToken();
@@ -65,26 +68,43 @@ LexItem Lexer::getNextToken(){
 	return LexItem(ERR, "ERR");
 }
 
+// TODO: This is probably doable in the first pass of the lexer, but might make things more messy. Consider trying implementing a one-pass solution.
 void Lexer::condenseNegNums(){
-	int idx = 1;
-	int end = lex_list.size()-2;
+	// Nothing should be done if there is only one, or no tokens in the list.
+	if (lex_list.size() <= 1)
+		return;
 
-	// LUL
+	// Check the first item in the list
+	LexItem lex = lex_list[0];
+	LexItem next_lex = lex_list[1];
+	if (lex.getToken() == MIN && 
+	next_lex.getToken() == NUM){
+		// Condense neg NUM token
+		LexItem condensed = LexItem(NUM, "-" + std::to_string(next_lex.getVal()));
+		// Eat old tokens 
+		lex_list.erase(lex_list.begin(), lex_list.begin()+2);
+		// Insert new token
+		lex_list.insert(lex_list.begin(), condensed);
+	}
+
+	// Check the rest of the items in the list 
+	int idx = 1;
+	int end = lex_list.size()-1;
 	while (idx < end){
+		LexItem prev_lex = lex_list[idx-1];
 		LexItem lex = lex_list[idx];
-		Token tok = lex.getToken();
-		if (tok == MIN){
-			LexItem prev = lex_list[idx-1];
-			LexItem next = lex_list[idx+1];
-			LexItem next_next = lex_list[idx+2];
-			if (prev.getToken() == LPAREN && 
-			next.getToken() == NUM && 
-			next_next.getToken() == RPAREN){
-				LexItem new_lex = LexItem(NUM, "-" + std::to_string(next.getVal()));
-				lex_list.erase(lex_list.begin()+idx-1, lex_list.begin()+idx+3);
-				lex_list.insert(lex_list.begin()+idx-1, new_lex);
-				idx--;
-			}
+		LexItem next_lex = lex_list[idx+1];
+		// If current token is -, previous token is an operator, and next token is a number...
+		if (lex.getToken() == MIN && 
+		std::find(op_set.begin(), op_set.end(), prev_lex.getToken()) != op_set.end() &&
+		next_lex.getToken() == NUM){
+			// Condense to neg NUM token
+			LexItem condensed = LexItem(NUM, "-" + std::to_string(next_lex.getVal()));
+			// Eat the old tokens
+			lex_list.erase(lex_list.begin()+idx, lex_list.begin()+idx+2);
+			// Insert condensed token
+			lex_list.insert(lex_list.begin()+idx, condensed);
+			idx--;
 		}
 		idx++;
 	}
@@ -96,4 +116,9 @@ void Lexer::gatherLexemes(){
 	(lex.getToken() != ERR))
 		pushBackLex(lex);
 	condenseNegNums();
+}
+
+void Lexer::clear(){
+	ss.clear();
+	lex_list.clear();
 }

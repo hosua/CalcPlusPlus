@@ -13,7 +13,6 @@ using std::queue;
 
 extern map<string, vector<Token>> assoc_map;
 extern map<Token, int> op_precedence_map;
-extern set<Token> op_set;
 
 class Parser {
 public:
@@ -25,6 +24,8 @@ public:
     void convertToRPN(); 
     // After converting the lexeme list into Reverse-Polish Notation, the output queue can now be evaluated.
     queue<LexItem> getOutputQueue(){ return output_queue; }
+    // Clear everything in the parser
+    void clear();
 private:
     vector<LexItem> lex_list;
     stack<LexItem> op_stack;
