@@ -19,10 +19,14 @@ void Parser::convertToRPN(){
     for (LexItem lex : lex_list){
         LexItem op_1 = lex;
         Token tok_1 = op_1.getToken();
-        if (tok_1 == NUM)
+        // - a number
+        if (tok_1 == NUM){
             output_queue.push(op_1);
+        // - a function
+        } else if (trig_set.find(tok_1) != trig_set.end()){
+            op_stack.push(op_1);
         // - an operator op_1:
-        else if (tok_1 != LPAREN && tok_1 != RPAREN && op_set.find(tok_1) != op_set.end()){
+        } else if (tok_1 != LPAREN && tok_1 != RPAREN && op_set.find(tok_1) != op_set.end()){
             vector<Token> left_assoc = assoc_map["left"];
             LexItem op_2;
             // while:
@@ -54,7 +58,17 @@ void Parser::convertToRPN(){
             assert(op_stack.top().getToken() == LPAREN);
             // discard LPAREN
             op_stack.pop();
-            // TODO: If I add functions like sin, cos, more code needs to go here.
+
+            if(!op_stack.empty()){
+                op_2 = op_stack.top();
+                Token tok_2 = op_2.getToken();
+                // if there is a function on top
+                if (trig_set.find(tok_2) != trig_set.end()){
+                    // pop it into the output queue
+                    op_stack.pop();
+                    output_queue.push(op_2);
+                }
+            }
         }
     }
 
@@ -65,8 +79,8 @@ void Parser::convertToRPN(){
         output_queue.push(op);
         op_stack.pop();
     }
-    /* DEBUGGING FUNCTION */
-    // cout << "-----" << endl;
+    /* DEBUGGING */
+    // cout << "-----" << output_queue.size() << "------" << endl;
     // while (!output_queue.empty()){
     //     cout << output_queue.front() << endl;
     //     output_queue.pop();

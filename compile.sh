@@ -1,2 +1,2 @@
 #!/bin/bash
-g++ -g *.cc *.h -o eq-solver
+g++ -g *.cc *.h -o math-expr-solver

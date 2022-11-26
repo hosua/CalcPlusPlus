@@ -1,14 +1,20 @@
 #include "lexer.h"
 #include <algorithm>
+#include <string> // transform
+#include <stack>
+
+using std::stack;
 
 // END, ERR, NUM, EQ, PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN
 map<Token, string> tok_str_map = {
-	{END, "END"}, {ERR, "ERR"}, {NUM, "NUM"}, {EQ, "EQ"}, {PLUS, "PLUS"}, {MIN, "MIN"}, {MULT, "MULT"}, {DIV, "DIV"}, {EXP, "EXP"},
-	{LPAREN, "LPAREN"}, {RPAREN, "RPAREN"}
+	{END, "END"}, {ERR, "ERR"}, {NUM, "NUM"}, {EQ, "EQ"}, {PLUS, "PLUS"}, {MIN, "MIN"}, {MULT, "MULT"}, {DIV, "DIV"}, {EXP, "EXP"}, 
+	{LPAREN, "LPAREN"}, {RPAREN, "RPAREN"},
+	{SIN, "SIN"}, {COS, "COS"}, {TAN, "TAN"}, {CSC, "CSC"}, {SEC, "SEC"}, {COT, "COT"}
 };
 map<string, Token> str_tok_map = {
 	{"END", END}, {"ERR", ERR}, {"NUM", NUM}, {"EQ", EQ}, {"PLUS", PLUS}, {"MIN", MIN}, {"MULT", MULT}, {"DIV", DIV}, {"EXP", EXP},
-	{"LPAREN", LPAREN}, {"RPAREN", RPAREN}
+	{"LPAREN", LPAREN}, {"RPAREN", RPAREN},
+	{"SIN", SIN}, {"COS", COS}, {"TAN", TAN}, {"CSC", CSC}, {"SEC", SEC}, {"COT", COT}
 };
 map<char, Token> sym_tok_map = {
 	{'=', EQ}, {'+', PLUS}, {'-', MIN}, {'*', MULT}, {'/', DIV}, {'^', EXP}, {'(', LPAREN}, {')', RPAREN}
@@ -16,6 +22,12 @@ map<char, Token> sym_tok_map = {
 map<Token, char> tok_sym_map = {
 	{EQ, '='}, {PLUS, '+'}, {MIN, '-'}, {MULT, '*'}, {DIV, '/'}, {EXP, '^'}, {LPAREN, '('}, {RPAREN, ')'}
 };
+
+// keyword sets for the lexer to detect keyword strings 
+set<string> kw_str_set { "SIN", "COS", "TAN", "CSC", "SEC", "COT" };
+
+// Set of all trigonometric functions
+set<Token> trig_set = { SIN, COS, TAN, CSC, SEC, COT };
 
 // Set of all supported operators
 set<Token> op_set = { PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN };
@@ -28,7 +40,7 @@ ostream& operator<<(ostream& out, LexItem& lex){
 	return out;
 }
 
-float LexItem::getVal(){
+double LexItem::getVal(){
 	// A value should never be retrived if the token is an operator.
 	assert(tok == NUM);
 	return val;
@@ -52,7 +64,8 @@ LexItem Lexer::getNextToken(){
 			if (ch == '.'){
 				if(has_dot){
 					cerr << "ERROR: Number \"" << lexeme << "\" contains an illegal decimal." << endl;
-					exit(EXIT_FAILURE);
+					err_flag = true;
+					return LexItem(ERR, "ERR");
 				} else {
 					has_dot = true;
 				}
@@ -62,13 +75,38 @@ LexItem Lexer::getNextToken(){
 		}
 		ss.putback(ch);
 		return LexItem(NUM, lexeme);
+	} else if (isalpha(ch)){ // search for keyword
+		// Gather preceeding chars into a string
+		string kw;
+		do {
+			kw += ch;
+			if (!ss.get(ch)){
+				cerr << "ERROR: Invalid keyword \"" << kw << "\"\n";
+				err_flag = true;
+				return LexItem(ERR, "ERR");
+			}
+		} while (isalpha(ch));
+		ss.putback(ch);
+		// Keywords are case-insensitive, convert to uppercase
+		std::transform(kw.begin(), kw.end(), kw.begin(), ::toupper);
+		// Search kw_str_set for a match
+		if (kw_str_set.find(kw) != kw_str_set.end()){
+			// cout << "Found keyword \"" << kw << "\"\n";
+			Token tok = str_tok_map[kw];
+			return LexItem(tok, kw);
+		}
+		
+		// No match error
+		cerr << "ERROR: Unknown keyword \"" << kw << "\"\n";
+		err_flag = true;
+		return LexItem(ERR, "ERR");
 	}
 
 	cerr << "ERROR: Illegal character \"" << ch << "\"" << endl;
+	err_flag = true;
 	return LexItem(ERR, "ERR");
 }
 
-// TODO: This is probably doable in the first pass of the lexer, but might make things more messy. Consider trying implementing a one-pass solution.
 void Lexer::condenseNegNums(){
 	// Nothing should be done if there is only one, or no tokens in the list.
 	if (lex_list.size() <= 1)
@@ -119,6 +157,7 @@ void Lexer::gatherLexemes(){
 }
 
 void Lexer::clear(){
+	err_flag = false;
 	ss.clear();
 	lex_list.clear();
 }

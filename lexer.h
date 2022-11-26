@@ -22,7 +22,8 @@ using std::endl;
 using std::cerr;
 
 enum Token {
-	END, ERR, NUM, EQ, PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN
+	END, ERR, NUM, EQ, PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN,
+	SIN, COS, TAN, CSC, SEC, COT
 };
 extern map<Token, string> tok_str_map;
 extern map<string, Token> str_tok_map;
@@ -30,11 +31,14 @@ extern map<char, Token> sym_tok_map;
 extern map<Token, char> tok_sym_map;
 extern set<Token> op_set;
 
+extern set<string> kw_str_set;
+extern set<Token> trig_set;
+
 class LexItem {
 private:
 	Token tok;	
 	string lex_str;
-	float val;
+	double val;
 public:
 	LexItem() : val(INT_MIN){}
 	LexItem(Token tok, string lexeme) : val(INT_MIN), tok(tok){
@@ -45,28 +49,23 @@ public:
 
 	Token getToken(){ return tok; } 
 	string getTokenStr(){ return tok_str_map[tok]; } 
-	float getVal();
+	double getVal();
 };
 // Allow LexItem to be printed directly
 extern ostream& operator<<(ostream& out, LexItem& lex);
 
 class Lexer {
-private:
-	stringstream ss;
-	vector<LexItem> lex_list;
-
-	// Gets the next token in the string stream
-	LexItem getNextToken();
-	// After getting all tokens, this function will "condense" all negative numbers into negative tokens. (i.e., (-42) -> -42)
-	void condenseNegNums();
-
 public:
-	Lexer(){}
-	Lexer(string eq_str){ ss << eq_str; }
+	Lexer() : err_flag(false) {}
+	Lexer(string eq_str){ 
+		err_flag = false;
+		ss << eq_str; 
+	}
 	~Lexer(){}
 	void setEquationStr(string eq_str){ ss << eq_str; }
 	void gatherLexemes();
 
+	bool checkErr(){ return err_flag; }
 	void pushBackLex(LexItem lex){ lex_list.push_back(lex); }
 	void printLexList(){
 		for (LexItem lex : lex_list)
@@ -75,6 +74,16 @@ public:
 	vector<LexItem> getLexList(){ return lex_list; }
 	// Clear everything in the lexer
 	void clear();
+
+private:
+	stringstream ss;
+	vector<LexItem> lex_list;
+	bool err_flag;
+	// Gets the next token in the string stream
+	LexItem getNextToken();
+	// After getting all tokens, this function will "condense" all negative numbers into negative tokens. (i.e., (-42) -> -42)
+	void condenseNegNums();
+
 };
 
 

@@ -16,7 +16,7 @@ extern map<Token, int> op_precedence_map;
 
 class Parser {
 public:
-    Parser(){}
+    Parser() : err_flag(false) {}
     Parser(vector<LexItem> lex_list) : lex_list(lex_list){}
     ~Parser(){}
     void setLexList(vector<LexItem> lex_list){ this->lex_list = lex_list; }
@@ -26,7 +26,9 @@ public:
     queue<LexItem> getOutputQueue(){ return output_queue; }
     // Clear everything in the parser
     void clear();
+
 private:
+    bool err_flag;
     vector<LexItem> lex_list;
     stack<LexItem> op_stack;
     queue<LexItem> output_queue;

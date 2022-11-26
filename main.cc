@@ -1,21 +1,26 @@
 #include "lexer.h"
 #include "parser.h"
 #include "calc.h"
+#include <limits>
 
-float evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
-	// cout << "eq_str: " << eq_str << endl;
-
+double evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
 	lexer->setEquationStr(eq_str);
 	lexer->gatherLexemes();
 	// lexer->printLexList(); // For debugging
 	vector<LexItem> lex_list = lexer->getLexList();
 
-	parser->setLexList(lex_list);
-	parser->convertToRPN();
+	double res; 
+	if (!lexer->checkErr()){
+		parser->setLexList(lex_list);
+		parser->convertToRPN();
 
-	queue<LexItem> output_queue = parser->getOutputQueue();
+		queue<LexItem> output_queue = parser->getOutputQueue();
+		res = calc->evalRPN(output_queue);
+	} else {
+		cerr << "Could not calculate that expression. Please check your syntax.\n";
+		res = ERR_RES;
+	}
 
-	float res = calc->evalRPN(output_queue);
 	lexer->clear();
 	parser->clear();
 	return res;
@@ -30,9 +35,10 @@ int main(){
 	string eq_str;
 	cout << "Enter a math expression:\n";
 	while (getline(cin, eq_str)){
-		float res = evalEquationStr(lexer, parser, calc, eq_str);
-		cout << res << "\n"
-		<< "Enter a math expression:\n";
+		double res = evalEquationStr(lexer, parser, calc, eq_str);
+		if (res != ERR_RES)
+			cout << res << "\n";
+		cout << "Enter a math expression:\n";
 	}
 
 	delete parser;

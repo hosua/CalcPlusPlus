@@ -1,3 +1,6 @@
 .history
 .vscode
-eq-solver
+
+objs/
+
+math-expr-solver
