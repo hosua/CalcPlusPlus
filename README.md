@@ -1,9 +1,9 @@
 # MathExprSolver 
 A C++ program that lexes and parses a mathematical expression string, and then calculates the result.
 
-As of now, the syntax checker probably won't catch every error.
-
 Uses the [shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_algorithm) to parse input to be evaluated.
+
+As of now, the syntax checker probably won't catch every error.
 
 ## Operators Supported
 ```
