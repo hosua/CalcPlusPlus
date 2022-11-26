@@ -53,9 +53,6 @@ double Calc::evalRPN(queue<LexItem> output_queue){
         } else {
             double a = convertToRadian(num_stack.top()); 
             num_stack.pop();
-            // FIXME: Order of operations for functions are not yet working properly. 
-            // I think the best solution is to have the lexer insert parenthesis when
-            // it does not find any after a function keyword.
             switch(tok){
                 case SIN:
                     num_stack.push(sin(a));
