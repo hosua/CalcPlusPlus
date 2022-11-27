@@ -91,8 +91,6 @@ private:
 	LexItem getNextToken();
 	// After getting all tokens, this function will "condense" all negative numbers into negative tokens. (i.e., (-42) -> -42)
 	void condenseNegNums();
-	// Check that parenthesis are immediate followed by a parenthesis, otherwise there is an error.
-	void checkFunctionParenthesis();
 
 };
 
