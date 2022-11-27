@@ -26,7 +26,7 @@ map<Token, char> tok_sym_map = {
 // keyword sets for the lexer to detect keyword strings 
 set<string> kw_str_set { "SIN", "COS", "TAN", "CSC", "SEC", "COT" };
 
-// Set of all functions (currently this is the same as trig_set but more will be added)
+// Set of all functions
 set<Token> fn_set = { SIN, COS, TAN, CSC, SEC, COT };
 
 // Set of all supported operators
@@ -75,7 +75,7 @@ LexItem Lexer::getNextToken(){
 		do {
 			kw += ch;
 			if (!ss.get(ch)){
-				cerr << "ERROR: Invalid keyword, or missing function paremeter \"" << kw << "\"\n";
+				cerr << "ERROR: Invalid keyword, or missing function parameter \"" << kw << "\"\n";
 				err_flag = true;
 				return LexItem(ERR);
 			}

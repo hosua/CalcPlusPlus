@@ -77,7 +77,7 @@ double Calc::evalRPN(queue<LexItem> output_queue){
                         cerr << "DOMAIN ERROR for CSC\n";
                         return ERR_RES;
                     }
-                    num_stack.push(1/sin(a));
+                    num_stack.push(1/a);
                     break;
                 case SEC:
                     a = cos(a);
@@ -85,7 +85,7 @@ double Calc::evalRPN(queue<LexItem> output_queue){
                         cerr << "DOMAIN ERROR for SEC\n";
                         return ERR_RES;
                     }
-                    num_stack.push(1/cos(a));
+                    num_stack.push(1/a);
                     break;
                 case COT:
                     a = tan(a);
@@ -93,7 +93,7 @@ double Calc::evalRPN(queue<LexItem> output_queue){
                         cerr << "DOMAIN ERROR for COT\n";
                         return ERR_RES;
                     }
-                    num_stack.push(1/tan(a));
+                    num_stack.push(1/a);
                     break;
                 default:
                     cerr << "ERROR: Unknown error in Calc\n";
