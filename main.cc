@@ -44,9 +44,10 @@ int main(){
 	cout << "Enter a math expression:\n";
 	while (getline(cin, eq_str)){
 		double res = evalEquationStr(lexer, parser, calc, eq_str);
-		if (res != ERR_RES)
-			cout << std::fixed << res << "\n";
-		cout << "Enter a math expression:\n";
+		if (res != ERR_RES){
+			cout << res << "\n" <<
+			"Enter a math expression:\n";
+		}
 	}
 
 	delete parser;
