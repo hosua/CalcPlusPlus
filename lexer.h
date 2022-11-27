@@ -46,7 +46,7 @@ public:
 	}
 	LexItem(Token tok, string lexeme) : val(INT_MIN), tok(tok){
 		if (tok == NUM)
-			val = std::stof(lexeme);
+			val = std::stod(lexeme);
 	}
 	~LexItem(){}
 
