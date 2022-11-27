@@ -19,8 +19,8 @@ void Parser::convertToRPN(){
     for (LexItem lex : lex_list){
         LexItem op_1 = lex;
         Token tok_1 = op_1.getToken();
-        // - a number
-        if (tok_1 == NUM){
+        // - a number or a constant
+        if (tok_1 == NUM || const_set.find(tok_1) != const_set.end()){
             output_queue.push(op_1);
         // - a function
         } else if (fn_set.find(tok_1) != fn_set.end()){
@@ -83,7 +83,7 @@ void Parser::convertToRPN(){
     while (!op_stack.empty()){
         // If the operator token on the top of the stack is a left parenthesis, then there is a mismatch.
         if (op_stack.top().getToken() == LPAREN){
-			cerr << "ERROR: Parenthesis mismatch \")\".\n";
+			cerr << "ERROR: Parenthesis mismatch \"(\".\n";
             err_flag = true;
             return;
         }

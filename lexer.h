@@ -23,7 +23,9 @@ using std::cerr;
 
 enum Token {
 	END, ERR, NUM, EQ, PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN,
-	SIN, COS, TAN, CSC, SEC, COT
+	SIN, COS, TAN, CSC, SEC, COT,
+	PI, E,
+	ABS, SQRT, LOG, LN
 };
 extern map<Token, string> tok_str_map;
 extern map<string, Token> str_tok_map;
@@ -33,10 +35,11 @@ extern set<Token> op_set;
 
 extern set<string> kw_str_set;
 extern set<Token> fn_set;
+extern set<Token> const_set;
 
 class LexItem {
 private:
-	double val;
+	long double val;
 	Token tok;	
 	string lex_str;
 public:
@@ -53,7 +56,7 @@ public:
 	Token getToken(){ return tok; } 
 	string getTokenStr(){ return tok_str_map[tok]; } 
 
-	double getVal(){
+	long double getVal(){
 		// A value should never be retrived if the token is an operator.
 		assert(tok == NUM && "FATAL ERROR: Attempted to retrieve a value from a non-NUM token.");
 		return val;

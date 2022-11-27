@@ -5,26 +5,39 @@
 // Set of all trig functions
 set<Token> trig_set = { SIN, COS, TAN, CSC, SEC, COT };
 
-double Calc::evalRPN(queue<LexItem> output_queue){
+long double Calc::evalRPN(queue<LexItem> output_queue){
     while (!output_queue.empty()){
         LexItem lex = output_queue.front();
         Token tok = lex.getToken();
         output_queue.pop();
         if (tok == NUM){
             num_stack.push(lex.getVal());
-        // If token is not a trig function
-        } else if (trig_set.find(tok) == trig_set.end()) {
+        // If token is a constant
+        } else if (const_set.find(tok) != const_set.end()){
+            switch(tok){
+                case PI:
+                    num_stack.push(M_PI);
+                    break;
+                case E:
+                    num_stack.push(EULERS_NUM);
+                    break;
+                default:
+                    cerr << "Error: const error in calc\n";
+                    return ERR_RES;
+            }
+        // If token is an operator
+        } else if (op_set.find(tok) != op_set.end()) {
             // If the num_stack is empty for any of these calls, there must be a syntax error somewhere.
             if(num_stack.empty()){
-                cerr << "ERROR: Calc detected syntax error\n";
+                cerr << "ERROR: Detected operator with no numbers\n";
                 return ERR_RES;
             }
-            double b = num_stack.top(); num_stack.pop();
+            long double b = num_stack.top(); num_stack.pop();
             if(num_stack.empty()){
-                cerr << "ERROR: Calc detected syntax error\n";
+                cerr << "ERROR: Detected consecutive operators\n";
                 return ERR_RES;
             }
-            double a = num_stack.top(); num_stack.pop();
+            long double a = num_stack.top(); num_stack.pop();
             switch(tok) {
                 case PLUS:
                     num_stack.push(a + b);
@@ -47,56 +60,78 @@ double Calc::evalRPN(queue<LexItem> output_queue){
                     num_stack.push(powf(a, b));
                     break;
                 default:
-                    cerr << "ERROR: Unknown error in Calc\n";
+                    cerr << "ERROR: Calc error in ops\n";
                     return ERR_RES;
             }
-        } else {
-            double a = convertToRadian(num_stack.top()); 
+        // If a trig function
+        } else if (trig_set.find(tok) != trig_set.end()){
+            long double input = (!radians_mode) ? convertToRadians(num_stack.top()) : num_stack.top();
             num_stack.pop();
             switch(tok){
                 case SIN:
-                    num_stack.push(sin(a));
+                    num_stack.push(sin(input));
                     break;
                 case COS:
                     // This needs to be done to avoid floating-point rounding errors
-                    a = cos(a);
-                    if (abs(a) <= EPSILON)
-                        a = 0;
-                    num_stack.push(a);
+                    input = cos(input);
+                    if (abs(input) <= EPSILON)
+                        input = 0;
+                    num_stack.push(input);
                     break;
                 case TAN:
-                    if (std::fmod(abs(a), M_PI_2) == 0){
+                    if (std::fmod(abs(input), M_PI_2) == 0){
                         cerr << "DOMAIN ERROR for TAN\n";
                         return ERR_RES;
                     }
-                    num_stack.push(tan(a));
+                    num_stack.push(tan(input));
                     break;
                 case CSC:
-                    a = sin(a);
-                    if (abs(a) <= EPSILON){
+                    input = sin(input);
+                    if (abs(input) <= EPSILON){
                         cerr << "DOMAIN ERROR for CSC\n";
                         return ERR_RES;
                     }
-                    num_stack.push(1/a);
+                    num_stack.push(1/input);
                     break;
                 case SEC:
-                    a = cos(a);
-                    if (abs(a) <= EPSILON){
+                    input = cos(input);
+                    if (abs(input) <= EPSILON){
                         cerr << "DOMAIN ERROR for SEC\n";
                         return ERR_RES;
                     }
-                    num_stack.push(1/a);
+                    num_stack.push(1/input);
                     break;
                 case COT:
-                    a = tan(a);
-                    if (abs(a) <= EPSILON){
+                    input = tan(input);
+                    if (abs(input) <= EPSILON){
                         cerr << "DOMAIN ERROR for COT\n";
                         return ERR_RES;
                     }
-                    num_stack.push(1/a);
+                    num_stack.push(1/input);
                     break;
                 default:
                     cerr << "ERROR: Unknown error in Calc\n";
+                    return ERR_RES;
+            }
+        // If a non-trig function (Since we already checked trig functions prior, we don't need to here. Just don't change the order of this if else.
+        } else if (fn_set.find(tok) != fn_set.end()){
+            long double input = num_stack.top(); 
+            num_stack.pop();
+            switch(tok){
+                case ABS:
+                    num_stack.push(abs(input));
+                    break;
+                case SQRT:
+                    num_stack.push(sqrt(input));
+                    break;
+                case LOG:
+                    num_stack.push(log10l(input));
+                    break;
+                case LN:
+                    num_stack.push(logl(input));
+                    break;
+                default:
+                    cerr << "Error: fn_set error\n";
                     return ERR_RES;
             }
         }

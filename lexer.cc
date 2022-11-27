@@ -9,12 +9,16 @@ using std::stack;
 map<Token, string> tok_str_map = {
 	{END, "END"}, {ERR, "ERR"}, {NUM, "NUM"}, {EQ, "EQ"}, {PLUS, "PLUS"}, {MIN, "MIN"}, {MULT, "MULT"}, {DIV, "DIV"}, {EXP, "EXP"}, 
 	{LPAREN, "LPAREN"}, {RPAREN, "RPAREN"},
-	{SIN, "SIN"}, {COS, "COS"}, {TAN, "TAN"}, {CSC, "CSC"}, {SEC, "SEC"}, {COT, "COT"}
+	{SIN, "SIN"}, {COS, "COS"}, {TAN, "TAN"}, {CSC, "CSC"}, {SEC, "SEC"}, {COT, "COT"},
+	{PI, "PI"}, {E, "E"},
+	{ABS, "ABS"}, {SQRT, "SQRT"}, {LOG, "LOG"}, {LN, "LN"}
 };
 map<string, Token> str_tok_map = {
 	{"END", END}, {"ERR", ERR}, {"NUM", NUM}, {"EQ", EQ}, {"PLUS", PLUS}, {"MIN", MIN}, {"MULT", MULT}, {"DIV", DIV}, {"EXP", EXP},
 	{"LPAREN", LPAREN}, {"RPAREN", RPAREN},
-	{"SIN", SIN}, {"COS", COS}, {"TAN", TAN}, {"CSC", CSC}, {"SEC", SEC}, {"COT", COT}
+	{"SIN", SIN}, {"COS", COS}, {"TAN", TAN}, {"CSC", CSC}, {"SEC", SEC}, {"COT", COT},
+	{"PI", PI}, {"E", E},
+	{"ABS", ABS}, {"SQRT", SQRT}, {"LOG", LOG}, {"LN", LN}
 };
 map<char, Token> sym_tok_map = {
 	{'=', EQ}, {'+', PLUS}, {'-', MIN}, {'*', MULT}, {'/', DIV}, {'^', EXP}, {'(', LPAREN}, {')', RPAREN}
@@ -23,11 +27,20 @@ map<Token, char> tok_sym_map = {
 	{EQ, '='}, {PLUS, '+'}, {MIN, '-'}, {MULT, '*'}, {DIV, '/'}, {EXP, '^'}, {LPAREN, '('}, {RPAREN, ')'}
 };
 
+set<Token> const_set = { PI, E };
+
 // keyword sets for the lexer to detect keyword strings 
-set<string> kw_str_set { "SIN", "COS", "TAN", "CSC", "SEC", "COT" };
+set<string> kw_str_set = { 
+	"SIN", "COS", "TAN", "CSC", "SEC", "COT", 
+	"PI", "E",
+	"ABS", "SQRT", "LOG", "LN"
+};
 
 // Set of all functions
-set<Token> fn_set = { SIN, COS, TAN, CSC, SEC, COT };
+set<Token> fn_set = { 
+	SIN, COS, TAN, CSC, SEC, COT,  
+	ABS, SQRT, LOG, LN
+};
 
 // Set of all supported operators
 set<Token> op_set = { PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN };
@@ -75,9 +88,10 @@ LexItem Lexer::getNextToken(){
 		do {
 			kw += ch;
 			if (!ss.get(ch)){
-				cerr << "ERROR: Invalid keyword, or missing function parameter \"" << kw << "\"\n";
-				err_flag = true;
-				return LexItem(ERR);
+				break;
+				// cerr << "ERROR: Invalid keyword, or missing function parameter \"" << kw << "\"\n";
+				// err_flag = true;
+				// return LexItem(ERR);
 			}
 		} while (isalpha(ch));
 		ss.putback(ch);

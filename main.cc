@@ -3,11 +3,11 @@
 #include "calc.h"
 #include <limits>
 
-double evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
+long double evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
 	lexer->setEquationStr(eq_str);
 	lexer->gatherLexemes();
 	// lexer->printLexList(); // For debugging
-	double res; 
+	long double res; 
 	vector<LexItem> lex_list = lexer->getLexList();
 
 	if (!lexer->checkErr()){
@@ -34,7 +34,7 @@ double evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
 	return res;
 }
 
-// TODO: Impelement CLI to use readline and history libraries
+// TODO: (maybe) Impelement CLI to use readline and history libraries
 
 int main(){
 	Parser* parser = new Parser();
@@ -43,11 +43,9 @@ int main(){
 	string eq_str;
 	cout << "Enter a math expression:\n";
 	while (getline(cin, eq_str)){
-		double res = evalEquationStr(lexer, parser, calc, eq_str);
-		if (res != ERR_RES){
-			cout << res << "\n" <<
-			"Enter a math expression:\n";
-		}
+		long double res = evalEquationStr(lexer, parser, calc, eq_str);
+		(res != ERR_RES) ? cout << res << "\n" : cerr << "Calc error.\n";
+		cout << "Enter a math expression:\n";
 	}
 
 	delete parser;
