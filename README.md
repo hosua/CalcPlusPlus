@@ -1,5 +1,5 @@
-# Calc++
-This is a program made with C++ that parses and calculates a mathematical expression string.
+# MathExprSolver 
+A C++ program that lexes and parses a mathematical expression string, and then calculates the result.
 
 Uses the [shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_algorithm) to parse input to be evaluated.
 
@@ -37,4 +37,4 @@ log, ln, sqrt, abs
 
 Note that you must parenthesize function parameters, i.e. cos(45).
 
-![Example](images/math-expr-solver.gif)
+![Example](images/calc++.gif)
