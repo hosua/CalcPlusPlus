@@ -16,7 +16,9 @@ As of now, the syntax checker probably won't catch every error.
 ```
 
 ## Constants Supported
+```
 e, pi
+```
 
 ## Functions Supported
 ```
