@@ -3,7 +3,9 @@ A scientific calculator made in C++.
 
 Uses the [shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_algorithm) to parse input to be evaluated.
 
-As of now, the syntax checker probably won't catch every error.
+![Example](images/calc++.gif)
+
+The syntax checker may not catch every input error.
 
 ## Operators Supported
 ```
@@ -36,5 +38,3 @@ log, ln, sqrt, abs
 ```
 
 Note that you must parenthesize function parameters, i.e. cos(45).
-
-![Example](images/calc++.gif)
