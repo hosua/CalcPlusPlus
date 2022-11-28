@@ -13,7 +13,7 @@ using std::stack;
 #define ERR_RES std::numeric_limits<long double>::min()
 
 // Used for checking if a number is close enough to zero to be considered zero.
-#define EPSILON std::numeric_limits<long double>::epsilon() * 10
+#define EPSILON std::numeric_limits<long double>::epsilon() * 10000
 
 #define EULERS_NUM exp(1)
 
@@ -29,9 +29,8 @@ public:
 
     // TODO: Implement ability to change degree/radian mode
     bool isRadianMode(){ return radians_mode; }
-    void toggleRadianMode(){
-        (radians_mode) ? radians_mode = false : radians_mode = true;
-    }
+
+    void setDegreeRadian(string mode);
 
 	long double getPrevAns(){ return prev_ans; }
 	void setPrevAns(long double ans){ prev_ans = ans; }

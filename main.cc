@@ -42,12 +42,37 @@ int main(){
 	Lexer* lexer = new Lexer();
 	Calc* calc = new Calc();
 	string eq_str;
+	cout << "--------------------------------------------------\n" <<
+	"By default, the calculator is set to degrees mode.\n" <<
+	"If you wish to change this, type !deg or !rad to change modes.\n" <<
+	"--------------------------------------------------\n";
 	cout << "Enter a math expression (press Ctrl+c to quit):\n";
 	while (getline(cin, eq_str)){
-		long double res = evalEquationStr(lexer, parser, calc, eq_str);
-		(res != ERR_RES) ? cout << std::setprecision(64) << res << "\n" : cerr << "Calc error.\n";
+		// Check if there is a command
+		if (eq_str.size() && eq_str[0] == '!'){
+			if (eq_str.size() == 1){
+				cerr << "ERROR: The command name must follow '!'\n";
+				continue;
+			}
+			unsigned int idx = 1;
+			string cmd = "";
+			while (idx < eq_str.size())
+				cmd += eq_str[idx++];
+			// No case sensitivity
+			std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
+			// Handle commands
+			if (cmd == "DEG" || cmd == "DEGREE" || cmd == "DEGREES")
+				calc->setDegreeRadian("degree");
+			else if (cmd == "RAD" || cmd == "RADIAN" || cmd == "RADIANS")
+				calc->setDegreeRadian("radian");
+			else
+				cerr << "Invalid command \"" << cmd << "!\"\n";
+		} else {
+			long double res = evalEquationStr(lexer, parser, calc, eq_str);
+			(res != ERR_RES) ? cout << std::setprecision(64) << res << "\n" : cerr << "Calc error.\n";
+			calc->setPrevAns(res);
+		}
 		cout << "Enter a math expression (press Ctrl+c to quit):\n";
-		calc->setPrevAns(res);
 	}
 
 	delete parser;

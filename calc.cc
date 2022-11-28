@@ -85,7 +85,7 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
                 case SIN:
                     input = sinl(input);
                     if (abs(input) <= EPSILON) input = 0;
-                    num_stack.push(sin(input));
+                    num_stack.push(input);
                     break;
                 case COS:
                     // This needs to be done to avoid floating-point rounding
@@ -95,7 +95,7 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
                     num_stack.push(input);
                     break;
                 case TAN:
-                    if (fmodl(abs(input), M_PI_2) == 0) {
+                    if (fmodl(abs(input), M_PI_2) <= EPSILON) {
                         cerr << "DOMAIN ERROR for TAN\n";
                         return ERR_RES;
                     }
@@ -187,4 +187,25 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
         }
     }
     return (abs(num_stack.top()) <= EPSILON) ? 0 : num_stack.top();
+}
+
+void Calc::setDegreeRadian(string mode){
+    if (mode == "radian"){
+        if (radians_mode){
+            cout << "Calculator was already in radians mode.\n";
+            return;
+        }
+        cout << "Set mode to radians.\n";
+        radians_mode = true;
+    } else if (mode == "degree"){
+        if (!radians_mode){
+            cout << "Calculator was already in degrees mode.\n";
+            return;
+        }
+        cout << "Set mode to degrees.\n";
+        radians_mode = false;
+    } else {
+        cerr << "FATAL ERROR: Invalid mode " << mode << "\n";
+        exit(EXIT_FAILURE);
+    }
 }

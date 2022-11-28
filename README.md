@@ -8,9 +8,15 @@ Uses the [shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_a
 * Syntax rules follow regular math syntax. The calculator follows order of operations.
 * You can use the output of the previous calculation by using the `ans` constant
 * Function parameters must be parenthesized i.e. cos(45).
+* You can change degrees/radians mode with `!deg` and `!rad`. By default, the calculator is set to degrees.
 
 Note: The syntax checker may not catch every input error.
 
+## Commands
+```
+!deg - Change to degrees mode
+!rad - Change to radians mode
+```
 ## Operators Supported
 ```
 () Parenthesis
