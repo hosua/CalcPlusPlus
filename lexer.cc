@@ -140,9 +140,8 @@ void Lexer::condenseNegNums(){
 	}
 
 	// Check the rest of the items in the list 
-	int idx = 1;
-	int end = lex_list.size()-1;
-	while (idx < end){
+	unsigned int idx = 1;
+	while (idx < lex_list.size()-1){
 		LexItem prev_lex = lex_list[idx-1];
 		LexItem lex = lex_list[idx];
 		LexItem next_lex = lex_list[idx+1];
@@ -162,12 +161,43 @@ void Lexer::condenseNegNums(){
 	}
 }
 
+// Inserts MULT tokens where numbers are next to parenthesis
+void Lexer::insertImplicitMult(){
+	unsigned int idx = 0;
+	while(idx < lex_list.size()-1){
+		LexItem lex = lex_list[idx];
+		LexItem next = lex_list[idx+1];
+		// If current token is a number and
+		if (lex.getToken() == NUM && 
+		// if next token is left parenthesis or
+		(next.getToken() == LPAREN ||
+		// next token is a function 
+		fn_set.find(next.getToken()) != fn_set.end()
+		)){
+			cout << "IN 1" << endl;
+			// Then insert a mult token
+			lex_list.insert(lex_list.begin()+idx+1, LexItem(MULT));
+			idx--;
+		// If current token is a right parenthesis and
+		} 
+		if (lex.getToken() == RPAREN &&
+		// next token is a number
+		next.getToken() == NUM){
+			cout << "IN 2" << endl;
+			lex_list.insert(lex_list.begin()+idx+1, LexItem(MULT));
+			idx--;
+		}
+		idx++;
+	}
+}
+
 void Lexer::gatherLexemes(){
 	LexItem lex;
 	while ( ((lex = getNextToken()).getToken() != END) &&
 	(lex.getToken() != ERR))
 		pushBackLex(lex);
 	condenseNegNums();
+	insertImplicitMult();
 }
 
 void Lexer::clear(){

@@ -22,7 +22,8 @@ public:
 
     // Checks lex_list and ensures that all functions are preceded by an LPAREN
     bool validateFunctionParenthesis();
-
+    // Check lex_list for consecutive operators
+    bool checkConsecutiveOps();
     bool checkErr(){ return err_flag; }
     void setLexList(vector<LexItem> lex_list){ this->lex_list = lex_list; }
     // Convert to Reverse-Polish Notation and store in output_queue

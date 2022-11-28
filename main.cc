@@ -13,7 +13,9 @@ long double evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_
 
 	if (!lexer->checkErr()){
 		parser->setLexList(lex_list);
-		if (!parser->validateFunctionParenthesis()){
+
+		if (!parser->checkConsecutiveOps() || !parser->validateFunctionParenthesis()){
+			cerr << "Parser detected an error, please check your syntax.\n";
 			res = ERR_RES;
 		} else {
 			parser->convertToRPN();
@@ -41,7 +43,7 @@ int main(){
 	Parser* parser = new Parser();
 	Lexer* lexer = new Lexer();
 	Calc* calc = new Calc();
-	string eq_str;
+	string eq_str = "";
 	cout << "--------------------------------------------------\n" <<
 	"By default, the calculator is set to degrees mode.\n" <<
 	"If you wish to change this, type !deg or !rad to change modes.\n" <<
@@ -49,7 +51,11 @@ int main(){
 	cout << "Enter a math expression (press Ctrl+c to quit):\n";
 	while (getline(cin, eq_str)){
 		// Check if there is a command
-		if (eq_str.size() && eq_str[0] == '!'){
+		if (eq_str.size() == 0){
+			cerr << "ERROR: You must enter an expression or a command!\n";
+			continue;
+		}
+		if (eq_str[0] == '!'){
 			if (eq_str.size() == 1){
 				cerr << "ERROR: The command name must follow '!'\n";
 				continue;
@@ -69,7 +75,8 @@ int main(){
 				cerr << "Invalid command \"" << cmd << "!\"\n";
 		} else {
 			long double res = evalEquationStr(lexer, parser, calc, eq_str);
-			(res != ERR_RES) ? cout << std::setprecision(64) << res << "\n" : cerr << "Calc error.\n";
+			if (res != ERR_RES) 
+				cout << std::setprecision(64) << res << "\n";
 			calc->setPrevAns(res);
 		}
 		cout << "Enter a math expression (press Ctrl+c to quit):\n";

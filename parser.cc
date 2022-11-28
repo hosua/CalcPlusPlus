@@ -102,17 +102,6 @@ void Parser::convertToRPN(){
     // exit(0);
 }
 
-void Parser::clear(){
-    err_flag = false;
-    lex_list.clear();
-    // Swap op_stack with empty_stack to clear it
-    stack<LexItem> empty_stack;
-    std::swap(op_stack, empty_stack);
-    // Swap output_queue with empty_queue to clear it
-    queue<LexItem> empty_queue;
-    std::swap(output_queue, empty_queue);
-}
-
 // Checks lex_list and ensures that all functions are preceded by an LPAREN
 bool Parser::validateFunctionParenthesis(){
     
@@ -128,4 +117,32 @@ bool Parser::validateFunctionParenthesis(){
         }
     }
     return true;
+}
+
+bool Parser::checkConsecutiveOps(){
+    unsigned int idx = 0;
+    while (idx < lex_list.size()-1){
+        LexItem lex = lex_list[idx];
+        LexItem next = lex_list[idx+1];
+        if (op_set.find(lex.getToken()) != op_set.end() &&
+        op_set.find(next.getToken()) != op_set.end()){
+            cerr << "ERROR: Detected consecutive operators: \"" 
+            << tok_sym_map[lex.getToken()] << "\" and \"" 
+            << tok_sym_map[next.getToken()] << "\"\n";
+            return false;
+        }
+        idx++;
+    }
+    return true;
+}
+
+void Parser::clear(){
+    err_flag = false;
+    lex_list.clear();
+    // Swap op_stack with empty_stack to clear it
+    stack<LexItem> empty_stack;
+    std::swap(op_stack, empty_stack);
+    // Swap output_queue with empty_queue to clear it
+    queue<LexItem> empty_queue;
+    std::swap(output_queue, empty_queue);
 }

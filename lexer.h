@@ -100,7 +100,8 @@ private:
 	LexItem getNextToken();
 	// After getting all tokens, this function will "condense" all negative numbers into negative tokens. (i.e., (-42) -> -42)
 	void condenseNegNums();
-
+	// inserts implicit MULT tokens in the lex_list
+	void insertImplicitMult();
 };
 
 
