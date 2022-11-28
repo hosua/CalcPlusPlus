@@ -23,6 +23,9 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
                 case E:
                     num_stack.push(EULERS_NUM);
                     break;
+                case ANS:
+                    num_stack.push(prev_ans);
+                    break;
                 default:
                     cerr << "Error: const error in calc\n";
                     return ERR_RES;

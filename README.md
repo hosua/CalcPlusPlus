@@ -5,7 +5,11 @@ Uses the [shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_a
 
 ![Example](images/calc++.gif)
 
-The syntax checker may not catch every input error.
+* Syntax rules follow regular math syntax. The calculator follows order of operations.
+* You can use the output of the previous calculation by using the `ans` constant
+* Function parameters must be parenthesized i.e. cos(45).
+
+Note: The syntax checker may not catch every input error.
 
 ## Operators Supported
 ```
@@ -20,7 +24,7 @@ The syntax checker may not catch every input error.
 
 ## Constants Supported
 ```
-e, pi
+e, pi, ans (previous answer)
 ```
 
 ## Functions Supported
@@ -36,5 +40,3 @@ sinh, cosh, tanh
 log, ln, sqrt, abs
 
 ```
-
-Note that you must parenthesize function parameters, i.e. cos(45).

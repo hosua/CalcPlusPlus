@@ -14,8 +14,7 @@ map<Token, string> tok_str_map = {
 	{SINH, "SINH"}, {COSH, "COSH"}, {TANH, "TANH"},
 	{PI, "PI"}, {E, "E"},
 	{ABS, "ABS"}, {SQRT, "SQRT"}, {LOG, "LOG"}, {LN, "LN"},
-
-	{MOD, "MOD"},
+	{MOD, "MOD"}, {ANS, "ANS"},
 };
 map<string, Token> str_tok_map = {
 	{"END", END}, {"ERR", ERR}, {"NUM", NUM}, {"EQ", EQ}, {"PLUS", PLUS}, {"MIN", MIN}, {"MULT", MULT}, {"DIV", DIV}, {"EXP", EXP},
@@ -24,7 +23,8 @@ map<string, Token> str_tok_map = {
 	{"ASIN", ASIN}, {"ACOS", ACOS}, {"ATAN", ATAN},
 	{"PI", PI}, {"E", E},
 	{"ABS", ABS}, {"SQRT", SQRT}, {"LOG", LOG}, {"LN", LN},
-	{"SINH", SINH}, {"COSH", COSH}, {"TANH", TANH}
+	{"SINH", SINH}, {"COSH", COSH}, {"TANH", TANH},
+	{"MOD", MOD}, {"ANS", ANS},
 };
 map<char, Token> sym_tok_map = {
 	{'=', EQ}, {'+', PLUS}, {'-', MIN}, {'*', MULT}, {'/', DIV}, {'^', EXP}, {'(', LPAREN}, {')', RPAREN}, {'%', MOD} 
@@ -33,16 +33,16 @@ map<Token, char> tok_sym_map = {
 	{EQ, '='}, {PLUS, '+'}, {MIN, '-'}, {MULT, '*'}, {DIV, '/'}, {EXP, '^'}, {LPAREN, '('}, {RPAREN, ')'}
 };
 
-set<Token> const_set = { PI, E };
+set<Token> const_set = { PI, E, ANS };
 
 // keyword sets for the lexer to detect keyword strings 
 set<string> kw_str_set = { 
 	"SIN", "COS", "TAN", "CSC", "SEC", "COT", 
 	"ASIN", "ACOS", "ATAN",
-	"PI", "E",
+	"PI", "E", // PIE
 	"ABS", "SQRT", "LOG", "LN",
 	"SINH", "COSH", "TANH",
-	"MOD",
+	"MOD", "ANS"
 };
 
 // Set of all functions

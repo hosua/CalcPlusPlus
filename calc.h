@@ -22,7 +22,7 @@ extern set<Token> trig_set;
 
 class Calc {
 public:
-    Calc() : radians_mode(false) {}
+    Calc() : radians_mode(false), prev_ans(0) {}
     ~Calc(){}
     // After the parser converts the lex list into Reverse-Polish Notation, it can be evaluated with this function.
     long double evalRPN(queue<LexItem> output_queue);
@@ -32,11 +32,17 @@ public:
     void toggleRadianMode(){
         (radians_mode) ? radians_mode = false : radians_mode = true;
     }
+
+	long double getPrevAns(){ return prev_ans; }
+	void setPrevAns(long double ans){ prev_ans = ans; }
+
 private:
     bool radians_mode;
     long double convertToRadians(float num){ return num * (M_PI/180); }
     stack<long double> num_stack;
     stack<Token> op_stack;
+
+	long double prev_ans;
 };
 
 #endif // CALC_H

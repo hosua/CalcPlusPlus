@@ -31,7 +31,7 @@ enum Token {
 	PI, E,
 	ABS, SQRT, LOG, LN,
 
-	MOD,
+	MOD, ANS
 };
 extern map<Token, string> tok_str_map;
 extern map<string, Token> str_tok_map;
@@ -44,10 +44,6 @@ extern set<Token> fn_set;
 extern set<Token> const_set;
 
 class LexItem {
-private:
-	long double val;
-	Token tok;	
-	string lex_str;
 public:
 	LexItem() : val(INT_MIN){}
 	LexItem(Token tok) : val(INT_MIN), tok(tok), lex_str(tok_str_map[tok]){
@@ -67,6 +63,10 @@ public:
 		assert(tok == NUM && "FATAL ERROR: Attempted to retrieve a value from a non-NUM token.");
 		return val;
 	}
+private:
+	long double val;
+	Token tok;	
+	string lex_str;
 };
 // Allow LexItem to be printed directly
 extern ostream& operator<<(ostream& out, LexItem& lex);
