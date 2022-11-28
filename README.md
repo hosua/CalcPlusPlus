@@ -1,5 +1,5 @@
-# MathExprSolver 
-A C++ program that lexes and parses a mathematical expression string, and then calculates the result.
+# Calc++
+A scientific calculator made in C++.
 
 Uses the [shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_algorithm) to parse input to be evaluated.
 
