@@ -24,8 +24,14 @@ using std::cerr;
 enum Token {
 	END, ERR, NUM, EQ, PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN,
 	SIN, COS, TAN, CSC, SEC, COT,
+	ASIN, ACOS, ATAN,
+
+	SINH, COSH, TANH,
+
 	PI, E,
-	ABS, SQRT, LOG, LN
+	ABS, SQRT, LOG, LN,
+
+	MOD,
 };
 extern map<Token, string> tok_str_map;
 extern map<string, Token> str_tok_map;

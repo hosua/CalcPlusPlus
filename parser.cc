@@ -1,12 +1,13 @@
 #include "parser.h"
 
 map<string, vector<Token>> assoc_map = {
-	{"left", {MULT, DIV, PLUS, MIN}},
+	{"left", {MULT, DIV, PLUS, MIN, MOD}},
 	{"right", {EXP}}
 };
 
 map<Token, int> op_precedence_map = {
 	{EXP, 3},
+    {MOD, 2},
 	{MULT, 2},
 	{DIV, 2},
 	{PLUS, 1},

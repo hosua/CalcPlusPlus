@@ -10,18 +10,24 @@ map<Token, string> tok_str_map = {
 	{END, "END"}, {ERR, "ERR"}, {NUM, "NUM"}, {EQ, "EQ"}, {PLUS, "PLUS"}, {MIN, "MIN"}, {MULT, "MULT"}, {DIV, "DIV"}, {EXP, "EXP"}, 
 	{LPAREN, "LPAREN"}, {RPAREN, "RPAREN"},
 	{SIN, "SIN"}, {COS, "COS"}, {TAN, "TAN"}, {CSC, "CSC"}, {SEC, "SEC"}, {COT, "COT"},
+	{ASIN, "ASIN"}, {ACOS, "ACOS"}, {ATAN, "ATAN"},
+	{SINH, "SINH"}, {COSH, "COSH"}, {TANH, "TANH"},
 	{PI, "PI"}, {E, "E"},
-	{ABS, "ABS"}, {SQRT, "SQRT"}, {LOG, "LOG"}, {LN, "LN"}
+	{ABS, "ABS"}, {SQRT, "SQRT"}, {LOG, "LOG"}, {LN, "LN"},
+
+	{MOD, "MOD"},
 };
 map<string, Token> str_tok_map = {
 	{"END", END}, {"ERR", ERR}, {"NUM", NUM}, {"EQ", EQ}, {"PLUS", PLUS}, {"MIN", MIN}, {"MULT", MULT}, {"DIV", DIV}, {"EXP", EXP},
 	{"LPAREN", LPAREN}, {"RPAREN", RPAREN},
 	{"SIN", SIN}, {"COS", COS}, {"TAN", TAN}, {"CSC", CSC}, {"SEC", SEC}, {"COT", COT},
+	{"ASIN", ASIN}, {"ACOS", ACOS}, {"ATAN", ATAN},
 	{"PI", PI}, {"E", E},
-	{"ABS", ABS}, {"SQRT", SQRT}, {"LOG", LOG}, {"LN", LN}
+	{"ABS", ABS}, {"SQRT", SQRT}, {"LOG", LOG}, {"LN", LN},
+	{"SINH", SINH}, {"COSH", COSH}, {"TANH", TANH}
 };
 map<char, Token> sym_tok_map = {
-	{'=', EQ}, {'+', PLUS}, {'-', MIN}, {'*', MULT}, {'/', DIV}, {'^', EXP}, {'(', LPAREN}, {')', RPAREN}
+	{'=', EQ}, {'+', PLUS}, {'-', MIN}, {'*', MULT}, {'/', DIV}, {'^', EXP}, {'(', LPAREN}, {')', RPAREN}, {'%', MOD} 
 };
 map<Token, char> tok_sym_map = {
 	{EQ, '='}, {PLUS, '+'}, {MIN, '-'}, {MULT, '*'}, {DIV, '/'}, {EXP, '^'}, {LPAREN, '('}, {RPAREN, ')'}
@@ -32,18 +38,22 @@ set<Token> const_set = { PI, E };
 // keyword sets for the lexer to detect keyword strings 
 set<string> kw_str_set = { 
 	"SIN", "COS", "TAN", "CSC", "SEC", "COT", 
+	"ASIN", "ACOS", "ATAN",
 	"PI", "E",
-	"ABS", "SQRT", "LOG", "LN"
+	"ABS", "SQRT", "LOG", "LN",
+	"SINH", "COSH", "TANH",
+	"MOD",
 };
 
 // Set of all functions
 set<Token> fn_set = { 
 	SIN, COS, TAN, CSC, SEC, COT,  
-	ABS, SQRT, LOG, LN
+	ABS, SQRT, LOG, LN,
+	SINH, COSH, TANH
 };
 
 // Set of all supported operators
-set<Token> op_set = { PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN };
+set<Token> op_set = { PLUS, MIN, MULT, DIV, EXP, LPAREN, RPAREN, MOD };
 
 ostream& operator<<(ostream& out, LexItem& lex){
 	Token tok = lex.getToken();
@@ -87,12 +97,8 @@ LexItem Lexer::getNextToken(){
 		string kw;
 		do {
 			kw += ch;
-			if (!ss.get(ch)){
+			if (!ss.get(ch))
 				break;
-				// cerr << "ERROR: Invalid keyword, or missing function parameter \"" << kw << "\"\n";
-				// err_flag = true;
-				// return LexItem(ERR);
-			}
 		} while (isalpha(ch));
 		ss.putback(ch);
 		// Keywords are case-insensitive, convert to uppercase

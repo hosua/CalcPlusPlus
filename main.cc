@@ -2,6 +2,7 @@
 #include "parser.h"
 #include "calc.h"
 #include <limits>
+#include <iomanip>
 
 long double evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
 	lexer->setEquationStr(eq_str);
@@ -41,11 +42,11 @@ int main(){
 	Lexer* lexer = new Lexer();
 	Calc* calc = new Calc();
 	string eq_str;
-	cout << "Enter a math expression:\n";
+	cout << "Enter a math expression (press Ctrl+c to quit):\n";
 	while (getline(cin, eq_str)){
 		long double res = evalEquationStr(lexer, parser, calc, eq_str);
-		(res != ERR_RES) ? cout << res << "\n" : cerr << "Calc error.\n";
-		cout << "Enter a math expression:\n";
+		(res != ERR_RES) ? cout << std::setprecision(40) << res << "\n" : cerr << "Calc error.\n";
+		cout << "Enter a math expression (press Ctrl+c to quit):\n";
 	}
 
 	delete parser;

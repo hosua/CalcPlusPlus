@@ -4,7 +4,7 @@ PROJDIR := $(realpath $(CURDIR))
 BUILDDIR := $(PROJDIR)/build
 
 # Name of the final executable
-TARGET = math-expr-solver
+TARGET = calc++
 
 # Decide whether the commands will be shown or not
 VERBOSE = TRUE
