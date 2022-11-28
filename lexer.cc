@@ -146,6 +146,8 @@ void Lexer::condenseNegNums(){
 		LexItem lex = lex_list[idx];
 		LexItem next_lex = lex_list[idx+1];
 		// If current token is -, previous token is an operator, and next token is a number...
+
+		// FIXME: Add support for multiple chained negative expressions, like 5-----5
 		if (lex.getToken() == MIN && 
 		std::find(op_set.begin(), op_set.end(), prev_lex.getToken()) != op_set.end() &&
 		next_lex.getToken() == NUM){
