@@ -67,6 +67,7 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
                 case MOD:
                     num_stack.push(fmodl(a, b));
                     break;
+
                 default:
                     cerr << "ERROR: Calc error in ops\n";
                     return ERR_RES;
@@ -79,14 +80,14 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
             num_stack.pop();
             switch (tok) {
                 case SIN:
-                    input = sin(input);
+                    input = sinl(input);
                     if (abs(input) <= EPSILON) input = 0;
                     num_stack.push(sin(input));
                     break;
                 case COS:
                     // This needs to be done to avoid floating-point rounding
                     // errors
-                    input = cos(input);
+                    input = cosl(input);
                     if (abs(input) <= EPSILON) input = 0;
                     num_stack.push(input);
                     break;
@@ -95,10 +96,10 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
                         cerr << "DOMAIN ERROR for TAN\n";
                         return ERR_RES;
                     }
-                    num_stack.push(tan(input));
+                    num_stack.push(tanl(input));
                     break;
                 case CSC:
-                    input = sin(input);
+                    input = sinl(input);
                     if (abs(input) <= EPSILON) {
                         cerr << "DOMAIN ERROR for CSC\n";
                         return ERR_RES;
@@ -106,7 +107,7 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
                     num_stack.push(1 / input);
                     break;
                 case SEC:
-                    input = cos(input);
+                    input = cosl(input);
                     if (abs(input) <= EPSILON) {
                         cerr << "DOMAIN ERROR for SEC\n";
                         return ERR_RES;
@@ -114,7 +115,7 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
                     num_stack.push(1 / input);
                     break;
                 case COT:
-                    input = tan(input);
+                    input = tanl(input);
                     if (abs(input) <= EPSILON) {
                         cerr << "DOMAIN ERROR for COT\n";
                         return ERR_RES;
@@ -123,22 +124,20 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
                     break;
                 case ASIN:
                     input = asinl(input);
-                    if (abs(input) <= EPSILON) 
-                        input = 0;
-                    num_stack.push(input); 
+                    if (abs(input) <= EPSILON) input = 0;
+                    num_stack.push(input);
                     break;
                 case ACOS:
                     input = acosl(input);
-                    if (abs(input) <= EPSILON) 
-                        input = 0;
-                    num_stack.push(input); 
+                    if (abs(input) <= EPSILON) input = 0;
+                    num_stack.push(input);
                     break;
                 case ATAN:
                     input = atanl(input);
-                    if (abs(input) <= EPSILON) 
-                        input = 0;
-                    num_stack.push(input); 
+                    if (abs(input) <= EPSILON) input = 0;
+                    num_stack.push(input);
                     break;
+
                 default:
                     cerr << "ERROR: Unknown error in Calc\n";
                     return ERR_RES;

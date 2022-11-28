@@ -45,7 +45,7 @@ int main(){
 	cout << "Enter a math expression (press Ctrl+c to quit):\n";
 	while (getline(cin, eq_str)){
 		long double res = evalEquationStr(lexer, parser, calc, eq_str);
-		(res != ERR_RES) ? cout << std::setprecision(40) << res << "\n" : cerr << "Calc error.\n";
+		(res != ERR_RES) ? cout << std::setprecision(64) << res << "\n" : cerr << "Calc error.\n";
 		cout << "Enter a math expression (press Ctrl+c to quit):\n";
 	}
 
