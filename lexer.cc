@@ -176,7 +176,6 @@ void Lexer::insertImplicitMult(){
 		// next token is a function 
 		fn_set.find(next.getToken()) != fn_set.end()
 		)){
-			cout << "IN 1" << endl;
 			// Then insert a mult token
 			lex_list.insert(lex_list.begin()+idx+1, LexItem(MULT));
 			idx--;
@@ -185,7 +184,6 @@ void Lexer::insertImplicitMult(){
 		if (lex.getToken() == RPAREN &&
 		// next token is a number
 		next.getToken() == NUM){
-			cout << "IN 2" << endl;
 			lex_list.insert(lex_list.begin()+idx+1, LexItem(MULT));
 			idx--;
 		}

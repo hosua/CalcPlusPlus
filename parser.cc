@@ -125,7 +125,9 @@ bool Parser::checkConsecutiveOps(){
         LexItem lex = lex_list[idx];
         LexItem next = lex_list[idx+1];
         if (op_set.find(lex.getToken()) != op_set.end() &&
-        op_set.find(next.getToken()) != op_set.end()){
+        op_set.find(next.getToken()) != op_set.end() &&
+        next.getToken() != LPAREN &&
+        lex.getToken() != RPAREN){
             cerr << "ERROR: Detected consecutive operators: \"" 
             << tok_sym_map[lex.getToken()] << "\" and \"" 
             << tok_sym_map[next.getToken()] << "\"\n";

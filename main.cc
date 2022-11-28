@@ -7,7 +7,7 @@
 long double evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
 	lexer->setEquationStr(eq_str);
 	lexer->gatherLexemes();
-	// lexer->printLexList(); // For debugging
+	lexer->printLexList(); // For debugging
 	long double res; 
 	vector<LexItem> lex_list = lexer->getLexList();
 
