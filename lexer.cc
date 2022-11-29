@@ -121,45 +121,87 @@ LexItem Lexer::getNextToken(){
 	return LexItem(ERR);
 }
 
+// void Lexer::condenseNegNums(){
+// 	// Nothing should be done if there is only one, or no tokens in the list.
+// 	if (lex_list.size() <= 1)
+// 		return;
+// 
+// 	// Check the first item in the list
+// 	LexItem lex = lex_list[0];
+// 	LexItem next_lex = lex_list[1];
+// 	if (lex.getToken() == MIN && 
+// 	next_lex.getToken() == NUM){
+// 		// Condense neg NUM token
+// 		LexItem condensed = LexItem(NUM, "-" + std::to_string(next_lex.getVal()));
+// 		// Eat old tokens 
+// 		lex_list.erase(lex_list.begin(), lex_list.begin()+2);
+// 		// Insert new token
+// 		lex_list.insert(lex_list.begin(), condensed);
+// 	}
+// 
+// 	// Check the rest of the items in the list 
+// 	unsigned int idx = 1;
+// 	while (idx < lex_list.size()-1){
+// 		LexItem prev_lex = lex_list[idx-1];
+// 		LexItem lex = lex_list[idx];
+// 		LexItem next_lex = lex_list[idx+1];
+// 		// If current token is -, previous token is an operator, and next token is a number...
+// 
+// 		// FIXME: Add support for multiple chained negative expressions, like 5-----5
+// 		// If current token is - and
+// 		if (lex.getToken() == MIN && 
+// 		// previous token is an operator and
+// 		op_set.find(prev_lex.getToken()) != op_set.end() &&
+// 		// next token is a number
+// 		next_lex.getToken() == NUM){
+// 			// Condense to neg NUM token
+// 			LexItem condensed = LexItem(NUM, "-" + std::to_string(next_lex.getVal()));
+// 			// Eat the old tokens
+// 			lex_list.erase(lex_list.begin()+idx, lex_list.begin()+idx+2);
+// 			// Insert condensed token
+// 			lex_list.insert(lex_list.begin()+idx, condensed);
+// 			idx--;
+// 		}
+// 		idx++;
+// 	}
+// }
+
 void Lexer::condenseNegNums(){
 	// Nothing should be done if there is only one, or no tokens in the list.
 	if (lex_list.size() <= 1)
 		return;
-
-	// Check the first item in the list
-	LexItem lex = lex_list[0];
-	LexItem next_lex = lex_list[1];
-	if (lex.getToken() == MIN && 
-	next_lex.getToken() == NUM){
-		// Condense neg NUM token
-		LexItem condensed = LexItem(NUM, "-" + std::to_string(next_lex.getVal()));
-		// Eat old tokens 
-		lex_list.erase(lex_list.begin(), lex_list.begin()+2);
-		// Insert new token
-		lex_list.insert(lex_list.begin(), condensed);
-	}
-
-	// Check the rest of the items in the list 
 	unsigned int idx = 1;
-	while (idx < lex_list.size()-1){
-		LexItem prev_lex = lex_list[idx-1];
-		LexItem lex = lex_list[idx];
-		LexItem next_lex = lex_list[idx+1];
-		// If current token is -, previous token is an operator, and next token is a number...
+	LexItem prev;
+	LexItem lex;
 
-		// FIXME: Add support for multiple chained negative expressions, like 5-----5
-		if (lex.getToken() == MIN && 
-		std::find(op_set.begin(), op_set.end(), prev_lex.getToken()) != op_set.end() &&
-		next_lex.getToken() == NUM){
-			// Condense to neg NUM token
-			LexItem condensed = LexItem(NUM, "-" + std::to_string(next_lex.getVal()));
-			// Eat the old tokens
-			lex_list.erase(lex_list.begin()+idx, lex_list.begin()+idx+2);
-			// Insert condensed token
-			lex_list.insert(lex_list.begin()+idx, condensed);
-			idx--;
+	while (idx < lex_list.size()){
+		prev = lex_list[idx-1];
+		lex = lex_list[idx];
+		if (op_set.find(prev.getToken()) != op_set.end() && prev.getToken() != RPAREN && lex.getToken() == MIN){
+			int sign = 1;
+			while (lex.getToken() == MIN){
+				sign *= -1;	
+				lex_list.erase(lex_list.begin()+idx);
+				if (idx == lex_list.size()){
+					err_flag = true;
+					cerr << "ERROR: - operator is missing a number.\n";
+					return;
+				}
+				lex = lex_list[idx];
+			}
+			if (sign > 0)
+				continue;
+			lex_list.insert(lex_list.begin()+idx, LexItem(MULT));
+			lex_list.insert(lex_list.begin()+idx, LexItem(NUM, "-1"));
 		}
 		idx++;
+	}
+
+	// Edge case for expression: --val
+	if (lex_list[0].getToken() == MIN){
+		lex_list.erase(lex_list.begin());
+		lex_list.insert(lex_list.begin(), LexItem(MULT));
+		lex_list.insert(lex_list.begin(), LexItem(NUM, "-1"));
 	}
 }
 
@@ -182,6 +224,7 @@ void Lexer::insertImplicitMult(){
 		} else if (lex.getToken() == RPAREN &&
 		// next token is a number or a function
 		(next.getToken() == NUM || fn_set.find(next.getToken()) != fn_set.end())){
+			// Then insert a mult token
 			lex_list.insert(lex_list.begin()+idx+1, LexItem(MULT));
 		}
 		idx++;

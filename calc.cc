@@ -41,7 +41,7 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
             long double b = num_stack.top();
             num_stack.pop();
             if (num_stack.empty()) {
-                cerr << "ERROR: Detected consecutive operators\n";
+                cerr << "ERROR: Calc detected an error\n";
                 return ERR_RES;
             }
             long double a = num_stack.top();
