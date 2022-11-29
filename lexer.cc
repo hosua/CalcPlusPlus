@@ -178,14 +178,11 @@ void Lexer::insertImplicitMult(){
 		)){
 			// Then insert a mult token
 			lex_list.insert(lex_list.begin()+idx+1, LexItem(MULT));
-			idx--;
 		// If current token is a right parenthesis and
-		} 
-		if (lex.getToken() == RPAREN &&
-		// next token is a number
-		next.getToken() == NUM){
+		} else if (lex.getToken() == RPAREN &&
+		// next token is a number or a function
+		(next.getToken() == NUM || fn_set.find(next.getToken()) != fn_set.end())){
 			lex_list.insert(lex_list.begin()+idx+1, LexItem(MULT));
-			idx--;
 		}
 		idx++;
 	}
