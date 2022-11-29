@@ -125,51 +125,6 @@ LexItem Lexer::getNextToken(){
 	return LexItem(ERR);
 }
 
-// void Lexer::condenseNegNums(){
-// 	// Nothing should be done if there is only one, or no tokens in the list.
-// 	if (lex_list.size() <= 1)
-// 		return;
-// 
-// 	// Check the first item in the list
-// 	LexItem lex = lex_list[0];
-// 	LexItem next_lex = lex_list[1];
-// 	if (lex.getToken() == MIN && 
-// 	next_lex.getToken() == NUM){
-// 		// Condense neg NUM token
-// 		LexItem condensed = LexItem(NUM, "-" + std::to_string(next_lex.getVal()));
-// 		// Eat old tokens 
-// 		lex_list.erase(lex_list.begin(), lex_list.begin()+2);
-// 		// Insert new token
-// 		lex_list.insert(lex_list.begin(), condensed);
-// 	}
-// 
-// 	// Check the rest of the items in the list 
-// 	unsigned int idx = 1;
-// 	while (idx < lex_list.size()-1){
-// 		LexItem prev_lex = lex_list[idx-1];
-// 		LexItem lex = lex_list[idx];
-// 		LexItem next_lex = lex_list[idx+1];
-// 		// If current token is -, previous token is an operator, and next token is a number...
-// 
-// 		// FIXME: Add support for multiple chained negative expressions, like 5-----5
-// 		// If current token is - and
-// 		if (lex.getToken() == MIN && 
-// 		// previous token is an operator and
-// 		op_set.find(prev_lex.getToken()) != op_set.end() &&
-// 		// next token is a number
-// 		next_lex.getToken() == NUM){
-// 			// Condense to neg NUM token
-// 			LexItem condensed = LexItem(NUM, "-" + std::to_string(next_lex.getVal()));
-// 			// Eat the old tokens
-// 			lex_list.erase(lex_list.begin()+idx, lex_list.begin()+idx+2);
-// 			// Insert condensed token
-// 			lex_list.insert(lex_list.begin()+idx, condensed);
-// 			idx--;
-// 		}
-// 		idx++;
-// 	}
-// }
-
 void Lexer::condenseNegNums(){
 	// Nothing should be done if there is only one, or no tokens in the list.
 	if (lex_list.size() <= 1)
@@ -240,8 +195,10 @@ void Lexer::gatherLexemes(){
 	while ( ((lex = getNextToken()).getToken() != END) &&
 	(lex.getToken() != ERR))
 		pushBackLex(lex);
-	condenseNegNums();
-	insertImplicitMult();
+	if (!err_flag){
+		condenseNegNums();
+		insertImplicitMult();
+	}
 }
 
 void Lexer::clear(){
