@@ -7,14 +7,14 @@
 long double evalEquationStr(Lexer* lexer, Parser* parser, Calc* calc, string eq_str){
 	lexer->setEquationStr(eq_str);
 	lexer->gatherLexemes();
-	lexer->printLexList(); // For debugging
+	// lexer->printLexList(); // For debugging
 	long double res; 
 	vector<LexItem> lex_list = lexer->getLexList();
 
 	if (!lexer->checkErr()){
 		parser->setLexList(lex_list);
 
-		if (!parser->checkConsecutiveOps() || !parser->validateFunctionParenthesis()){
+		if (!parser->checkConsecutiveOpsAndNums() || !parser->validateFunctionParenthesis()){
 			cerr << "Parser detected an error, please check your syntax.\n";
 			res = ERR_RES;
 		} else {

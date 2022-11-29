@@ -104,7 +104,6 @@ void Parser::convertToRPN(){
 
 // Checks lex_list and ensures that all functions are preceded by an LPAREN
 bool Parser::validateFunctionParenthesis(){
-    
     for (int idx = 0; idx < (int)(lex_list.size()-1); idx++){
         LexItem lex = lex_list[idx];
         if (fn_set.find(lex.getToken()) != fn_set.end()){
@@ -119,7 +118,8 @@ bool Parser::validateFunctionParenthesis(){
     return true;
 }
 
-bool Parser::checkConsecutiveOps(){
+// Check lex_list for consecutive operators or numbers, which are syntax errors
+bool Parser::checkConsecutiveOpsAndNums(){
     unsigned int idx = 0;
     while (idx < lex_list.size()-1){
         LexItem lex = lex_list[idx];
@@ -131,6 +131,9 @@ bool Parser::checkConsecutiveOps(){
             cerr << "ERROR: Detected consecutive operators: \"" 
             << tok_sym_map[lex.getToken()] << "\" and \"" 
             << tok_sym_map[next.getToken()] << "\"\n";
+            return false;
+        } else if (lex.getToken() == NUM && next.getToken() == NUM){
+            cerr << "ERROR: Detected consecutive numbers: \"" << lex.getVal() << "\" and \"" << next.getVal() << "\".\n";
             return false;
         }
         idx++;
