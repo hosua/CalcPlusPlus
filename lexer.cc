@@ -12,6 +12,7 @@ map<Token, string> tok_str_map = {
 	{SIN, "SIN"}, {COS, "COS"}, {TAN, "TAN"}, {CSC, "CSC"}, {SEC, "SEC"}, {COT, "COT"},
 	{ASIN, "ASIN"}, {ACOS, "ACOS"}, {ATAN, "ATAN"},
 	{SINH, "SINH"}, {COSH, "COSH"}, {TANH, "TANH"},
+	{ASINH, "ASINH"}, {ACOSH, "ACOSH"}, {ATANH, "ATANH"},
 	{PI, "PI"}, {E, "E"},
 	{ABS, "ABS"}, {SQRT, "SQRT"}, {LOG, "LOG"}, {LN, "LN"},
 	{MOD, "MOD"}, {ANS, "ANS"},
@@ -21,16 +22,17 @@ map<string, Token> str_tok_map = {
 	{"LPAREN", LPAREN}, {"RPAREN", RPAREN},
 	{"SIN", SIN}, {"COS", COS}, {"TAN", TAN}, {"CSC", CSC}, {"SEC", SEC}, {"COT", COT},
 	{"ASIN", ASIN}, {"ACOS", ACOS}, {"ATAN", ATAN},
+	{"SINH", SINH}, {"COSH", COSH}, {"TANH", TANH},
+	{"ASINH", ASINH}, {"ACOSH", ACOSH}, {"ATANH", ATANH},
 	{"PI", PI}, {"E", E},
 	{"ABS", ABS}, {"SQRT", SQRT}, {"LOG", LOG}, {"LN", LN},
-	{"SINH", SINH}, {"COSH", COSH}, {"TANH", TANH},
 	{"MOD", MOD}, {"ANS", ANS},
 };
 map<char, Token> sym_tok_map = {
 	{'=', EQ}, {'+', PLUS}, {'-', MIN}, {'*', MULT}, {'/', DIV}, {'^', EXP}, {'(', LPAREN}, {')', RPAREN}, {'%', MOD} 
 };
 map<Token, char> tok_sym_map = {
-	{EQ, '='}, {PLUS, '+'}, {MIN, '-'}, {MULT, '*'}, {DIV, '/'}, {EXP, '^'}, {LPAREN, '('}, {RPAREN, ')'}
+	{EQ, '='}, {PLUS, '+'}, {MIN, '-'}, {MULT, '*'}, {DIV, '/'}, {EXP, '^'}, {LPAREN, '('}, {RPAREN, ')'}, {MOD, '%'}
 };
 
 set<Token> const_set = { PI, E, ANS };
@@ -42,6 +44,7 @@ set<string> kw_str_set = {
 	"PI", "E", // PIE
 	"ABS", "SQRT", "LOG", "LN",
 	"SINH", "COSH", "TANH",
+	"ASINH", "ACOSH", "ATANH",
 	"MOD", "ANS"
 };
 
@@ -49,7 +52,8 @@ set<string> kw_str_set = {
 set<Token> fn_set = { 
 	SIN, COS, TAN, CSC, SEC, COT,  
 	ABS, SQRT, LOG, LN,
-	SINH, COSH, TANH
+	SINH, COSH, TANH,
+	ASINH, ACOSH, ATANH
 };
 
 // Set of all supported operators

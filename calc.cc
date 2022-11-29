@@ -179,7 +179,21 @@ long double Calc::evalRPN(queue<LexItem> output_queue) {
                     if (abs(input) <= EPSILON) input = 0;
                     num_stack.push(input);
                     break;
-
+                case ASINH:
+                    input = asinhl(input);
+                    if (abs(input) <= EPSILON) input = 0;
+                    num_stack.push(input);
+                    break;
+                case ACOSH:
+                    input = acoshl(input);
+                    if (abs(input) <= EPSILON) input = 0;
+                    num_stack.push(input);
+                    break;
+                case ATANH:
+                    input = atanhl(input);
+                    if (abs(input) <= EPSILON) input = 0;
+                    num_stack.push(input);
+                    break;
                 default:
                     cerr << "Error: fn_set error\n";
                     return ERR_RES;

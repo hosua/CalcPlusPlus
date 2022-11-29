@@ -27,6 +27,7 @@ enum Token {
 	ASIN, ACOS, ATAN,
 
 	SINH, COSH, TANH,
+	ASINH, ACOSH, ATANH,
 
 	PI, E,
 	ABS, SQRT, LOG, LN,
