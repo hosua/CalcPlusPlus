@@ -7,7 +7,7 @@ Uses the [shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_a
 
 * Syntax rules follow regular math syntax. The calculator follows order of operations.
 * Function parameters must be parenthesized, i.e. `cos(45)`.
-* Implicit multiplication is supported, i.e. `5cos(45)5` and 5(45)5(42) are valid expressions.
+* Implicit multiplication is supported, i.e. `5cos(45)5` and `5(45)5(42)` are valid expressions.
 * You can use the output of the previous calculation by using the `ans` constant
 * You can change degrees/radians mode with `!deg` and `!rad`. By default, the calculator is set to degrees.
 
