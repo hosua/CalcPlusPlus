@@ -11,7 +11,7 @@ Uses the [shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_a
 * You can use the output of the previous calculation by using the `ans` constant
 * You can change degrees/radians mode with `!deg` and `!rad`. By default, the calculator is set to degrees.
 
-Note: The syntax checker may not catch every input error.
+Note: The syntax checker does not catch all syntax/input errors.
 
 ## Commands
 ```
